@@ -58,14 +58,16 @@ Parameters:
 
 Resources:
 
+# RDS
+
   DbSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupName: Db-Sg
-      GroupDescription: Allow postgres access only from within the security group
+      GroupDescription: Sg for DB instance
       VpcId: !Ref VPC
 
-  SGDbIngress:
+  SgDbIngress:
     Type: 'AWS::EC2::SecurityGroupIngress'
     Properties:
       GroupId: !GetAtt DbSecurityGroup.GroupId
@@ -99,6 +101,41 @@ Resources:
       DBSubnetGroupName: !Ref DbSubnetGroup
       VpcSecurityGroupIds:
         - !GetAtt DbSecurityGroup.GroupId
+        
+# Elasticache 
+        
+  ElcSubnetGroup:      
+    Type: 'AWS::ElastiCache::SubnetGroup'
+    Properties: 
+      CacheSubnetGroupName: redis-subnet-group
+      Description: Subnet group for demo Redis nodes
+      SubnetIds: !Ref SubnetGroup
+      
+  ElcSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Sg for elc instance
+      VpcId: !Ref VPC
+          
+  ElcDbIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    Properties:
+      GroupId: !GetAtt ElcSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref SecurityGroup 
+        
+  ElasticacheCluster:
+    Type: 'AWS::ElastiCache::CacheCluster'
+    Properties:
+      AutoMinorVersionUpgrade: 'true'
+      CacheSubnetGroupName: !Ref ElcSubnetGroup
+      Engine: redis
+      CacheNodeType: 'cache.t3.medium' 
+      NumCacheNodes: '2'
+      VpcSecurityGroupIds:
+        - !GetAtt ElcSecurityGroup.GroupId
 
 Outputs:
 
@@ -109,3 +146,11 @@ Outputs:
   DbPort:
     Description: Port of Database
     Value: !GetAtt RDSCluster.Endpoint.Port
+    
+  ElcUrl:
+    Description: Url to Redis database
+    Value: !GetAtt ElasticacheCluster.RedisEndpoint.Address
+    
+  ElcPort:
+    Description: Url to Redis database
+    Value: !GetAtt ElasticacheCluster.RedisEndpoint.Port
