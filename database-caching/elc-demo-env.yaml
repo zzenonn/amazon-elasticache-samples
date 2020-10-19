@@ -63,7 +63,6 @@ Resources:
   DbSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: Db-Sg
       GroupDescription: Sg for DB instance
       VpcId: !Ref VPC
 
