@@ -122,17 +122,22 @@ Resources:
       FromPort: 6379
       ToPort: 6379
       SourceSecurityGroupId: !Ref SecurityGroup 
-        
-  ElasticacheCluster:
-    Type: 'AWS::ElastiCache::CacheCluster'
+      
+  RedisReplicationGroup:
+    Type: 'AWS::ElastiCache::ReplicationGroup'
     Properties:
-      AutoMinorVersionUpgrade: 'true'
+      ReplicationGroupDescription: Redis cluster
+      NumCacheClusters: '2'
+      Engine: 'redis'
+      CacheNodeType: 'cache.t3.medium'
+      AutoMinorVersionUpgrade: true
+      AutomaticFailoverEnabled: true
+      MultiAZEnabled: true
       CacheSubnetGroupName: !Ref ElcRedisSubnetGroup
-      Engine: redis
-      CacheNodeType: 'cache.t3.medium' 
-      NumCacheNodes: '2'
-      VpcSecurityGroupIds:
+      EngineVersion: '6.x'
+      SecurityGroupIds:
         - !GetAtt ElcSecurityGroup.GroupId
+        
 
 Outputs:
 
@@ -144,10 +149,18 @@ Outputs:
     Description: Port of Database
     Value: !GetAtt RDSCluster.Endpoint.Port
     
+  ElcConfigUrl:
+    Description: Url to configure Redis database
+    Value: !GetAtt RedisReplicationGroup.ConfigurationEndPoint.Address
+    
+  ElcConfigPort:
+    Description: Port to configure Redis database
+    Value: !GetAtt RedisReplicationGroup.ConfigurationEndPoint.Port
+    
   ElcUrl:
-    Description: Url to Redis database
-    Value: !GetAtt ElasticacheCluster.RedisEndpoint.Address
+    Description: Url to Redis primary
+    Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Address
     
   ElcPort:
-    Description: Url to Redis database
-    Value: !GetAtt ElasticacheCluster.RedisEndpoint.Port
+    Description: Port to Redis primary
+    Value: !GetAtt RedisReplicationGroup.PrimaryEndPoint.Port
