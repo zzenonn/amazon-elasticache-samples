@@ -75,11 +75,10 @@ Resources:
       ToPort: 3306
       SourceSecurityGroupId: !Ref SecurityGroup    
   
-  DbSubnetGroup:
+  DbMysqlSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties: 
       DBSubnetGroupDescription: Subnet group for demo RDS DB instances
-      DBSubnetGroupName: mysql-subnet-group
       SubnetIds: !Ref SubnetGroup
 
   RDSCluster:
@@ -103,10 +102,9 @@ Resources:
         
 # Elasticache 
         
-  ElcSubnetGroup:      
+  ElcRedisSubnetGroup:      
     Type: 'AWS::ElastiCache::SubnetGroup'
     Properties: 
-      CacheSubnetGroupName: redis-subnet-group
       Description: Subnet group for demo Redis nodes
       SubnetIds: !Ref SubnetGroup
       
