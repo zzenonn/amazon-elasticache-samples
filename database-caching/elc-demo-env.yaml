@@ -48,7 +48,7 @@ Parameters:
     ConstraintDescription: must contain only alphanumeric characters.
 
   SecurityGroup:
-    Type: AWS::EC2::SecurityGroup::Id
+    Type: 'AWS::EC2::SecurityGroup::Id'
     
   VPC:
     Type: 'AWS::EC2::VPC::Id'
@@ -78,7 +78,7 @@ Resources:
     Type: AWS::RDS::DBSubnetGroup
     Properties: 
       DBSubnetGroupDescription: Subnet group for demo RDS DB instances
-      DBSubnetGroupName: MySQL-Subnet-Group
+      DBSubnetGroupName: mysql-subnet-group
       SubnetIds: !Ref SubnetGroup
 
   RDSCluster:
