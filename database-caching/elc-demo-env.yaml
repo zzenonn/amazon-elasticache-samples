@@ -75,7 +75,7 @@ Resources:
       ToPort: 3306
       SourceSecurityGroupId: !Ref SecurityGroup    
   
-  DbMysqlSubnetGroup:
+  DbMySqlSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties: 
       DBSubnetGroupDescription: Subnet group for demo RDS DB instances
@@ -96,7 +96,7 @@ Resources:
         MinCapacity: 2
         MaxCapacity: 4
         SecondsUntilAutoPause: 1800
-      DBSubnetGroupName: !Ref DbSubnetGroup
+      DBSubnetGroupName: !Ref DbMySqlSubnetGroup
       VpcSecurityGroupIds:
         - !GetAtt DbSecurityGroup.GroupId
         
