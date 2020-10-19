@@ -127,7 +127,7 @@ Resources:
     Type: 'AWS::ElastiCache::CacheCluster'
     Properties:
       AutoMinorVersionUpgrade: 'true'
-      CacheSubnetGroupName: !Ref ElcSubnetGroup
+      CacheSubnetGroupName: !Ref ElcRedisSubnetGroup
       Engine: redis
       CacheNodeType: 'cache.t3.medium' 
       NumCacheNodes: '2'
