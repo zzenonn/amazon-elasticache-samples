@@ -63,6 +63,7 @@ Resources:
     Properties:
       GroupName: Db-Sg
       GroupDescription: Allow postgres access only from within the security group
+      VpcId: !Ref VPC
 
   SGDbIngress:
     Type: 'AWS::EC2::SecurityGroupIngress'
